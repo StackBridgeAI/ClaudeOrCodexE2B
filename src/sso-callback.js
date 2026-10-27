@@ -3,7 +3,13 @@ import { findUserByEmail } from "./users.js"
 // Called with the raw query string from the IdP redirect, e.g.
 //   "email=ana%40acme.com&state=xyz"
 export function handleCallback(query) {
-  const params = new URLSearchParams(query)
+  // URLSearchParams decodes a raw "+" as a space, but the IdP leaves "+" in
+  // emails unencoded. Re-encode it in the email pair only so it stays a plus.
+  const preserved = query
+    .split("&")
+    .map((pair) => (pair.startsWith("email=") ? pair.replaceAll("+", "%2B") : pair))
+    .join("&")
+  const params = new URLSearchParams(preserved)
   const email = params.get("email")
   if (!email) return { status: 400, error: "missing email" }
 
