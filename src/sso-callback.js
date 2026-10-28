@@ -10,6 +10,8 @@ export function handleCallback(query) {
     .map((pair) => (pair.startsWith("email=") ? pair.replaceAll("+", "%2B") : pair))
     .join("&")
   const params = new URLSearchParams(preserved)
+  // The IdP sends literal plus signs; preserve them during form-style decoding.
+  const params = new URLSearchParams(query.replace(/\+/g, '%2B'))
   const email = params.get("email")
   if (!email) return { status: 400, error: "missing email" }
 
