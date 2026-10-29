@@ -1,0 +1,9 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.0.0">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>neptune-hubspot-webhook-apphost</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Neptune.HubSpot.Webhook.Api\Neptune.HubSpot.Webhook.Api.csproj" />
+  </ItemGroup>
+</Project>
