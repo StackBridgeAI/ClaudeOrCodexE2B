@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <RootNamespace>Neptune.HubSpot.Webhook</RootNamespace>
+    <UserSecretsId>neptune-hubspot-webhook</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Neptune.HubSpot.Webhook.ServiceDefaults\Neptune.HubSpot.Webhook.ServiceDefaults.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Neptune.HubSpot.Webhook.Tests" />
+  </ItemGroup>
+</Project>
