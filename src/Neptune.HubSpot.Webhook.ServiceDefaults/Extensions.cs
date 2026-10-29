@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -9,12 +9,9 @@ using OpenTelemetry.Trace;
 
 namespace Neptune.HubSpot.Webhook.ServiceDefaults;
 
-/// <summary>Shared Aspire defaults: telemetry, health checks, service discovery, resilience.</summary>
+/// <summary>Shared Aspire defaults: OpenTelemetry, health checks, service discovery and HTTP resilience.</summary>
 public static class Extensions
 {
-    private const string HealthEndpointPath = "/health";
-    private const string AlivenessEndpointPath = "/alive";
-
     public static TBuilder AddServiceDefaults<TBuilder>(this TBuilder builder)
         where TBuilder : IHostApplicationBuilder
     {
@@ -49,9 +46,9 @@ public static class Extensions
                 .AddRuntimeInstrumentation())
             .WithTracing(tracing => tracing
                 .AddSource(builder.Environment.ApplicationName)
-                .AddAspNetCoreInstrumentation(o => o.Filter = context =>
-                    !context.Request.Path.StartsWithSegments(HealthEndpointPath)
-                    && !context.Request.Path.StartsWithSegments(AlivenessEndpointPath))
+                .AddAspNetCoreInstrumentation(t =>
+                    t.Filter = ctx => !ctx.Request.Path.StartsWithSegments("/health")
+                        && !ctx.Request.Path.StartsWithSegments("/alive"))
                 .AddHttpClientInstrumentation());
 
         if (!string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
@@ -64,16 +61,8 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        // Health endpoints are exposed in Development only (Aspire guidance).
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapHealthChecks(HealthEndpointPath);
-            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("live"),
-            });
-        }
-
+        app.MapHealthChecks("/health");
+        app.MapHealthChecks("/alive", new() { Predicate = r => r.Tags.Contains("live") });
         return app;
     }
 }

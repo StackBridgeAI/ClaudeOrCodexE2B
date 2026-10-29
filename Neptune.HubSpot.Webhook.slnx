@@ -1,10 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/Neptune.HubSpot.Webhook.Api/Neptune.HubSpot.Webhook.Api.csproj" />
     <Project Path="src/Neptune.HubSpot.Webhook.AppHost/Neptune.HubSpot.Webhook.AppHost.csproj" />
     <Project Path="src/Neptune.HubSpot.Webhook.ServiceDefaults/Neptune.HubSpot.Webhook.ServiceDefaults.csproj" />
-    <Project Path="src/Neptune.HubSpot.Webhook/Neptune.HubSpot.Webhook.csproj" />
   </Folder>
   <Folder Name="/test/">
-    <Project Path="test/Neptune.HubSpot.Webhook.Tests/Neptune.HubSpot.Webhook.Tests.csproj" />
+    <Project Path="test/Neptune.HubSpot.Webhook.Api.Tests/Neptune.HubSpot.Webhook.Api.Tests.csproj" />
   </Folder>
 </Solution>
